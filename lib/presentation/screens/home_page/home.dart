@@ -53,10 +53,18 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Row(children: [
-            Text('GG',style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),),
-            Text('Notes',style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w600),)
-          ],),
+          title: Row(
+            children: [
+              Text(
+                'GG',
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+              ),
+              Text(
+                'Notes',
+                style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w600),
+              )
+            ],
+          ),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.logout),
@@ -68,9 +76,7 @@ class _HomePageState extends State<HomePage> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const CreateNote()))
-                .then((value) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const CreateNote())).then((value) {
               if (value) {
                 _refresh();
               }
@@ -83,22 +89,27 @@ class _HomePageState extends State<HomePage> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               margin: const EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(.2),
-                  borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(color: Colors.grey.withOpacity(.2), borderRadius: BorderRadius.circular(8)),
               child: TextFormField(
                 controller: keyword,
-                decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    icon: Icon(Icons.search),
-                    hintText: "Search"),
+                onChanged: (value) {
+                  if (value.isNotEmpty) {
+                    setState(() {
+                      notes = searchNote();
+                    });
+                  } else {
+                    setState(() {
+                      notes = getAllNotes();
+                    });
+                  }
+                },
+                decoration: const InputDecoration(border: InputBorder.none, icon: Icon(Icons.search), hintText: "Search"),
               ),
             ),
             Expanded(
               child: FutureBuilder<List<NoteModel>>(
                 future: notes,
-                builder: (BuildContext context,
-                    AsyncSnapshot<List<NoteModel>> snapshot) {
+                builder: (BuildContext context, AsyncSnapshot<List<NoteModel>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();
                   } else if (snapshot.hasData && snapshot.data!.isEmpty) {
@@ -111,21 +122,21 @@ class _HomePageState extends State<HomePage> {
                         itemCount: items.length,
                         itemBuilder: (context, index) {
                           return ListTile(
-                            subtitle: Text(DateFormat("yMd").format(
-                                DateTime.parse(items[index].createdAt))),
+                            subtitle: Text(DateFormat("yMd").format(DateTime.parse(items[index].createdAt))),
                             title: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(items[index].noteTitle, style: TextStyle(fontSize: 18),),
+                                Text(
+                                  items[index].noteTitle,
+                                  style: TextStyle(fontSize: 18),
+                                ),
                                 Text(items[index].noteContent),
                               ],
                             ),
                             trailing: IconButton(
                               icon: const Icon(Icons.delete),
                               onPressed: () {
-                                db
-                                    .deleteNote(items[index].noteId!)
-                                    .whenComplete(() {
+                                db.deleteNote(items[index].noteId!).whenComplete(() {
                                   _refresh();
                                 });
                               },
@@ -146,12 +157,7 @@ class _HomePageState extends State<HomePage> {
                                             TextButton(
                                               onPressed: () {
                                                 //Now update method
-                                                db
-                                                    .updateNote(
-                                                    title.text,
-                                                    content.text,
-                                                    items[index].noteId)
-                                                    .whenComplete(() {
+                                                db.updateNote(title.text, content.text, items[index].noteId).whenComplete(() {
                                                   //After update, note will refresh
                                                   _refresh();
                                                   Navigator.pop(context);
@@ -169,35 +175,33 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                       ],
                                       title: const Text("Update note"),
-                                      content: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            //We need two textfield
-                                            TextFormField(
-                                              controller: title,
-                                              validator: (value) {
-                                                if (value!.isEmpty) {
-                                                  return "Title is required";
-                                                }
-                                                return null;
-                                              },
-                                              decoration: const InputDecoration(
-                                                label: Text("Title"),
-                                              ),
-                                            ),
-                                            TextFormField(
-                                              controller: content,
-                                              validator: (value) {
-                                                if (value!.isEmpty) {
-                                                  return "Content is required";
-                                                }
-                                                return null;
-                                              },
-                                              decoration: const InputDecoration(
-                                                label: Text("Content"),
-                                              ),
-                                            ),
-                                          ]),
+                                      content: Column(mainAxisSize: MainAxisSize.min, children: [
+                                        //We need two textfield
+                                        TextFormField(
+                                          controller: title,
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return "Title is required";
+                                            }
+                                            return null;
+                                          },
+                                          decoration: const InputDecoration(
+                                            label: Text("Title"),
+                                          ),
+                                        ),
+                                        TextFormField(
+                                          controller: content,
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return "Content is required";
+                                            }
+                                            return null;
+                                          },
+                                          decoration: const InputDecoration(
+                                            label: Text("Content"),
+                                          ),
+                                        ),
+                                      ]),
                                     );
                                   });
                             },
