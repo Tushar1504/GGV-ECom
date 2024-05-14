@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:ggv_ecom/utils/json_model/user_model.dart';
+import 'package:ggv_ecom/data/models/user_model.dart';
 import 'package:meta/meta.dart';
 
-import '../../screens/authentication/sqlite/sqlite.dart';
+import '../../../data/data_sources/remote/sqlite.dart';
 
 part 'sign_up_event.dart';
 part 'sign_up_state.dart';

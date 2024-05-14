@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:ggv_ecom/main.dart';
-import 'package:ggv_ecom/presentation/screens/authentication/sqlite/sqlite.dart';
+import 'package:ggv_ecom/data/data_sources/remote/sqlite.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {

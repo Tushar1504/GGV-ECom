@@ -9,13 +9,14 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i7;
+import 'package:auto_route/auto_route.dart';
 import 'package:ggv_ecom/presentation/screens/auth/login/login_imports.dart'
     as _i3;
 import 'package:ggv_ecom/presentation/screens/auth/signup/signup_imports.dart'
     as _i5;
 import 'package:ggv_ecom/presentation/screens/auth/widgets/auth_imports.dart'
     as _i1;
-import 'package:ggv_ecom/presentation/screens/home_page/home.dart' as _i2;
+import 'package:ggv_ecom/presentation/screens/home_page/cart.dart' as _i2;
 import 'package:ggv_ecom/presentation/screens/onboard/onboard_imports.dart'
     as _i4;
 import 'package:ggv_ecom/presentation/screens/splash/splash_import.dart' as _i6;
@@ -34,7 +35,7 @@ abstract class $AppRouter extends _i7.RootStackRouter {
     HomePageRoute.name: (routeData) {
       return _i7.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i2.HomePage(),
+        child:  _i2.HomePage(),
       );
     },
     LoginRoute.name: (routeData) {
@@ -133,6 +134,9 @@ class RegisterRoute extends _i7.PageRouteInfo<void> {
 
   static const _i7.PageInfo<void> page = _i7.PageInfo<void>(name);
 }
+
+/// generated route for
+/// [_i2.SearchButton]
 
 /// generated route for
 /// [_i6.Splash]

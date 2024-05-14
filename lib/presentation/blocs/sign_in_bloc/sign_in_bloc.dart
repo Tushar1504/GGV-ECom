@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../utils/json_model/user_model.dart';
-import '../../screens/authentication/sqlite/sqlite.dart';
+import '../../../data/models/user_model.dart';
+import '../../../data/data_sources/remote/sqlite.dart';
 
 part 'sign_in_event.dart';
 part 'sign_in_state.dart';
