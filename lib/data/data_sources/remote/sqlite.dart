@@ -1,13 +1,14 @@
-import 'package:ggv_ecom/utils/json_model/user_model.dart';
+import 'package:ggv_ecom/data/models/user_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-import '../../../../utils/json_model/notes_model.dart';
+import '../../../../data/models/cart_model.dart';
+
 
 class DataBaseHelper {
-  final databaseName = "user.db";
-  String noteTable =
-      "create table notes (noteId INTEGER PRIMARY KEY AUTOINCREMENT, noteTitle TEXT NOT NULL, noteContent TEXT NOT NULL, createdAt TEXT DEFAULT CURRENT_TIMESTAMP)";
+  final databaseName = "shopper.db";
+  String cart =
+      "create table cart (id INTEGER PRIMARY KEY AUTOINCREMENT, product TEXT NOT NULL, description TEXT NOT NULL, amount REAL)";
 
 
   String users =
@@ -23,11 +24,11 @@ class DataBaseHelper {
         version: 2,
         onCreate: (db, version) async {
           await db.execute(users);
-          await db.execute(noteTable);
+          await db.execute(cart);
         },
         onUpgrade: (db, oldVersion, newVersion) async {
           if (oldVersion < 2) {
-            await db.execute(noteTable);
+            await db.execute(cart);
           }
         }
     );
@@ -52,33 +53,33 @@ class DataBaseHelper {
     return db.insert('users', user.toMap());
   }
 
-  Future<List<NoteModel>> searchNotes(String keyword) async {
+  Future<List<CartModel>> searchCartItem(String keyword) async {
     final Database db = await initDB();
     List<Map<String, Object?>> searchResult = await db
-        .rawQuery("select * from notes where noteTitle LIKE ?", ["%$keyword%"]);
-    return searchResult.map((e) => NoteModel.fromMap(e)).toList();
+        .rawQuery("select * from cart where product LIKE ?", ["%$keyword%"]);
+    return searchResult.map((e) => CartModel.fromMap(e)).toList();
   }
 
-  Future<int> createNote(NoteModel note) async {
+  Future<int> createCartItem(CartModel addToCart) async {
     final Database db = await initDB();
-    return db.insert('notes', note.toMap());
+    return db.insert('cart', addToCart.toMap());
   }
 
-  Future<List<NoteModel>> getNotes() async {
+  Future<List<CartModel>> getCartItem() async {
     final Database db = await initDB();
-    List<Map<String, Object?>> result = await db.query('notes');
-    return result.map((e) => NoteModel.fromMap(e)).toList();
+    List<Map<String, Object?>> result = await db.query('cart');
+    return result.map((e) => CartModel.fromMap(e)).toList();
   }
 
-  Future<int> deleteNote(int id) async {
+  Future<int> deleteCartItem(int id) async {
     final Database db = await initDB();
-    return db.delete('notes', where: 'noteId = ?', whereArgs: [id]);
+    return db.delete('cart', where: 'id = ?', whereArgs: [id]);
   }
 
-  Future<int> updateNote(title, content, noteId) async {
+  Future<int> updateCartItem(id, product, description, amount) async {
     final Database db = await initDB();
     return db.rawUpdate(
-        'update notes set noteTitle = ?, noteContent = ? where noteId = ?',
-        [title, content, noteId]);
+        'update cart set product = ?, description = ? where id = ?, amount = ?',
+        [id, product, description, amount]);
   }
 }
